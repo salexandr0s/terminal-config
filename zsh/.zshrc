@@ -79,8 +79,24 @@ alias ll="eza --icons -la --git"
 alias lt="eza --icons --tree --level=2"
 alias lg="lazygit"
 alias y="yazi"
-alias cc="claude"
-alias cx="codex"
+cc() {
+  local target="$HOME/GitHub"
+  if [[ -n "$1" && -d "$HOME/GitHub/$1" ]]; then
+    target="$HOME/GitHub/$1"
+    shift
+  fi
+  cd "$target" || return
+  claude "$@"
+}
+cx() {
+  local target="$HOME/GitHub"
+  if [[ -n "$1" && -d "$HOME/GitHub/$1" ]]; then
+    target="$HOME/GitHub/$1"
+    shift
+  fi
+  cd "$target" || return
+  codex "$@"
+}
 
 cdgh() { cd "$HOME/GitHub/$1"; }
 ccc() { cd "$HOME/GitHub/$1" && claude; }

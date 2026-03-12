@@ -35,6 +35,7 @@ terminal-config/
 - `direnv` for per-project env loading
 - `zoxide` for smarter directory jumps
 - `eza`, `bat`, `lazygit`, `yazi`
+- `cc <repo>` and `cx <repo>` shortcuts that open Claude or Codex in `~/GitHub/<repo>`
 - optional `tmux` with sane defaults
 
 ## Install
@@ -96,6 +97,21 @@ Common things to change:
 - add or remove aliases in `zsh/.zshrc`
 - remove `tmux` entirely if you do not use it
 - add personal env setup in `~/.config/terminal/local.zshenv`
+
+## AI Shortcuts
+
+The default shell config includes project-aware wrappers for Claude and Codex:
+
+```bash
+cc
+cc terminal-config
+cx
+cx terminal-config
+```
+
+- `cc` and `cx` with no arguments start in `~/GitHub`
+- `cc <repo>` and `cx <repo>` start in `~/GitHub/<repo>` when that directory exists
+- other arguments are passed through to the underlying `claude` or `codex` command
 
 ## Verification
 
