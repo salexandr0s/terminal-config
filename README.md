@@ -14,6 +14,14 @@ This repo covers shell and multiplexer config. The Ghostty app config lives sepa
 ```text
 terminal-config/
 ├── Brewfile                # Terminal packages and fonts
+├── bin/
+│   ├── ai-notify           # Shared Claude/Codex completion notifier with cooldown support
+│   ├── cc                  # Claude launcher rooted in ~/GitHub
+│   ├── cc-fast             # Claude fast-mode launcher
+│   ├── cc-deep             # Claude deep-mode launcher
+│   ├── cx                  # Codex launcher rooted in ~/GitHub
+│   ├── cx-fast             # Codex fast-mode launcher
+│   └── cx-deep             # Codex deep-mode launcher
 ├── install.sh              # Idempotent bootstrap + symlink installer
 ├── zsh/
 │   ├── .zprofile           # Login-shell setup
@@ -35,7 +43,9 @@ terminal-config/
 - `direnv` for per-project env loading
 - `zoxide` for smarter directory jumps
 - `eza`, `bat`, `lazygit`, `yazi`
-- `cc <repo>` and `cx <repo>` shortcuts that open Claude or Codex in `~/GitHub/<repo>`
+- GitHub-aware `cc` / `cx` launchers for `claude` and `codex`
+- shared `fast` / `normal` / `deep` assistant launchers
+- shared `ai-notify` helper used by both Claude and Codex with cooldown-based smart notify
 - optional `tmux` with sane defaults
 
 ## Install
@@ -49,6 +59,7 @@ exec zsh
 
 The installer will:
 
+- ensure `~/GitHub` exists
 - install Homebrew packages from `Brewfile`
 - install Oh My Zsh if missing
 - install required Oh My Zsh custom plugins
@@ -98,20 +109,28 @@ Common things to change:
 - remove `tmux` entirely if you do not use it
 - add personal env setup in `~/.config/terminal/local.zshenv`
 
-## AI Shortcuts
-
-The default shell config includes project-aware wrappers for Claude and Codex:
+By default, `cc` and `cx` run inside `~/GitHub/<project>`:
 
 ```bash
-cc
-cc terminal-config
-cx
-cx terminal-config
+cc            # open claude in ~/GitHub
+cc pnevma     # open claude in ~/GitHub/pnevma
+cc-fast       # open claude in fast mode
+cc-deep       # open claude in deep mode
+cx            # open codex in ~/GitHub
+cx pnevma     # open codex in ~/GitHub/pnevma
+cx-fast       # open codex in fast mode
+cx-deep       # open codex in deep mode
 ```
 
-- `cc` and `cx` with no arguments start in `~/GitHub`
-- `cc <repo>` and `cx <repo>` start in `~/GitHub/<repo>` when that directory exists
-- other arguments are passed through to the underlying `claude` or `codex` command
+If the first argument is not a known project directory, the launcher passes it through to the underlying tool. `cx` also refreshes the generated Codex config before startup and prints the active mode/profile/reasoning banner because Codex's built-in footer is currently less informative than Claude's status line.
+
+`ai-notify` defaults to smart notify via a cooldown window. Local overrides:
+
+```bash
+export AI_NOTIFY_ALWAYS=1
+export AI_NOTIFY_COOLDOWN_SECONDS=10
+export AI_NOTIFY_SOUND=/System/Library/Sounds/Funk.aiff
+```
 
 ## Verification
 

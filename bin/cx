@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+resolve_mode() {
+  case "$(basename "$0")" in
+    cx-fast) printf 'fast\n' ;;
+    cx-deep) printf 'deep\n' ;;
+    *) printf '%s\n' "${AI_HOUSE_MODE:-normal}" ;;
+  esac
+}
+
+arg_value() {
+  local short_flag="$1"
+  local long_flag="$2"
+  shift 2
+  local arg
+
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+
+    case "$arg" in
+      "$short_flag"|"${long_flag}")
+        if [ $# -gt 0 ]; then
+          printf '%s\n' "$1"
+          return 0
+        fi
+        ;;
+      "$short_flag"=*|"$long_flag"=*)
+        printf '%s\n' "${arg#*=}"
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+has_reasoning_override() {
+  local arg next
+
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+
+    case "$arg" in
+      -c|--config)
+        if [ $# -gt 0 ]; then
+          next="$1"
+          shift
+          case "$next" in
+            model_reasoning_effort=*) return 0 ;;
+          esac
+        fi
+        ;;
+      -c=*|--config=*)
+        case "${arg#*=}" in
+          model_reasoning_effort=*) return 0 ;;
+        esac
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+should_print_banner() {
+  local first_arg="${1:-}"
+
+  case "$first_arg" in
+    ''|-h|--help|-V|--version|help|exec|review|login|logout|completion|features|debug|mcp|mcp-server|app|app-server|sandbox|apply|resume|fork|cloud)
+      return 1
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+}
+
+github_root="${GITHUB_ROOT:-$HOME/GitHub}"
+target="$github_root"
+renderer="$github_root/ai-config/scripts/render-codex-config.sh"
+mode="$(resolve_mode)"
+profile="${AI_HOUSE_STYLE:-concise}"
+approval="${AI_HOUSE_APPROVAL:-never}"
+sandbox="${AI_HOUSE_SANDBOX:-danger-full-access}"
+
+case "$mode" in
+  fast) reasoning="low" ;;
+  deep) reasoning="xhigh" ;;
+  *) mode="normal"; reasoning="high" ;;
+esac
+
+if [ -x "$renderer" ]; then
+  "$renderer" >/dev/null
+fi
+
+if [ $# -gt 0 ] && [[ "$1" != -* ]] && [ -d "$github_root/$1" ]; then
+  target="$github_root/$1"
+  shift
+fi
+
+if explicit_profile="$(arg_value -p --profile "$@" 2>/dev/null)"; then
+  profile="$explicit_profile"
+fi
+
+cd "$target"
+
+if should_print_banner "${1:-}"; then
+  model=$(awk -F'"' '/^model = / {print $2; exit}' "$HOME/.codex/config.toml" 2>/dev/null || printf 'gpt-5.4')
+  printf '\033[36mCodex\033[0m %s │ mode %s │ profile %s │ reasoning %s │ safe %s/%s\n' \
+    "$model" "$mode" "$profile" "$reasoning" "$approval" "$sandbox" >&2
+fi
+
+export AI_HOUSE_MODE="$mode"
+export AI_HOUSE_STYLE="$profile"
+export AI_HOUSE_APPROVAL="$approval"
+export AI_HOUSE_SANDBOX="$sandbox"
+export AI_HOUSE_REASONING="$reasoning"
+
+extra_args=()
+if ! arg_value -p --profile "$@" >/dev/null 2>&1; then
+  extra_args+=(-p "$profile")
+fi
+if ! has_reasoning_override "$@"; then
+  extra_args+=(-c "model_reasoning_effort=\"$reasoning\"")
+fi
+
+exec codex "${extra_args[@]}" "$@"

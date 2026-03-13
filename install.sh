@@ -5,6 +5,7 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_SUFFIX=".bak-$(date +%Y%m%d%H%M%S)"
 ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 TERMINAL_CONFIG_DIR="$HOME/.config/terminal"
+GITHUB_ROOT="$HOME/GitHub"
 
 link() {
   local src="$1" dst="$2"
@@ -46,7 +47,9 @@ ensure_oh_my_zsh() {
 }
 
 ensure_plugin() {
-  local name="$1" repo="$2" target="$ZSH_CUSTOM_DIR/plugins/$name"
+  local name="$1"
+  local repo="$2"
+  local target="$ZSH_CUSTOM_DIR/plugins/$name"
 
   if [ -d "$target" ]; then
     echo "Plugin already present: $name"
@@ -84,9 +87,14 @@ ensure_local_examples() {
   fi
 }
 
+ensure_github_root() {
+  mkdir -p "$GITHUB_ROOT"
+}
+
 echo "Bootstrapping terminal-config..."
 echo
 
+ensure_github_root
 ensure_brew_bundle
 ensure_oh_my_zsh
 ensure_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions"

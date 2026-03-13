@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+resolve_mode() {
+  case "$(basename "$0")" in
+    cc-fast) printf 'fast\n' ;;
+    cc-deep) printf 'deep\n' ;;
+    *) printf '%s\n' "${AI_HOUSE_MODE:-normal}" ;;
+  esac
+}
+
+arg_value() {
+  local flag="$1"
+  shift
+  local arg next
+
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+
+    case "$arg" in
+      "$flag")
+        if [ $# -gt 0 ]; then
+          printf '%s\n' "$1"
+          return 0
+        fi
+        ;;
+      "$flag"=*)
+        printf '%s\n' "${arg#*=}"
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+github_root="${GITHUB_ROOT:-$HOME/GitHub}"
+target="$github_root"
+mode="$(resolve_mode)"
+style="${AI_HOUSE_STYLE:-concise}"
+safety="${AI_HOUSE_SAFETY:-default}"
+
+case "$mode" in
+  fast) effort="low" ;;
+  deep) effort="max" ;;
+  *) mode="normal"; effort="high" ;;
+esac
+
+if [ $# -gt 0 ] && [[ "$1" != -* ]] && [ -d "$github_root/$1" ]; then
+  target="$github_root/$1"
+  shift
+fi
+
+if explicit_effort="$(arg_value --effort "$@" 2>/dev/null)"; then
+  effort="$explicit_effort"
+fi
+
+if explicit_safety="$(arg_value --permission-mode "$@" 2>/dev/null)"; then
+  safety="$explicit_safety"
+fi
+
+cd "$target"
+
+export AI_HOUSE_MODE="$mode"
+export AI_HOUSE_STYLE="$style"
+export AI_HOUSE_SAFETY="$safety"
+export AI_HOUSE_EFFORT="$effort"
+
+extra_args=()
+if ! arg_value --effort "$@" >/dev/null 2>&1; then
+  extra_args+=(--effort "$effort")
+fi
+if ! arg_value --permission-mode "$@" >/dev/null 2>&1; then
+  extra_args+=(--permission-mode "$safety")
+fi
+
+exec claude "${extra_args[@]}" "$@"

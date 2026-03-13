@@ -33,6 +33,16 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+export GITHUB_ROOT="${GITHUB_ROOT:-$HOME/GitHub}"
+export TERMINAL_CONFIG_REPO="${TERMINAL_CONFIG_REPO:-$GITHUB_ROOT/terminal-config}"
+
+if [ -d "$TERMINAL_CONFIG_REPO/bin" ]; then
+  case ":$PATH:" in
+    *":$TERMINAL_CONFIG_REPO/bin:"*) ;;
+    *) export PATH="$TERMINAL_CONFIG_REPO/bin:$PATH" ;;
+  esac
+fi
+
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 
@@ -79,29 +89,11 @@ alias ll="eza --icons -la --git"
 alias lt="eza --icons --tree --level=2"
 alias lg="lazygit"
 alias y="yazi"
-cc() {
-  local target="$HOME/GitHub"
-  if [[ -n "$1" && -d "$HOME/GitHub/$1" ]]; then
-    target="$HOME/GitHub/$1"
-    shift
-  fi
-  cd "$target" || return
-  claude "$@"
-}
-cx() {
-  local target="$HOME/GitHub"
-  if [[ -n "$1" && -d "$HOME/GitHub/$1" ]]; then
-    target="$HOME/GitHub/$1"
-    shift
-  fi
-  cd "$target" || return
-  codex "$@"
-}
 
-cdgh() { cd "$HOME/GitHub/$1"; }
-ccc() { cd "$HOME/GitHub/$1" && claude; }
-cxc() { cd "$HOME/GitHub/$1" && codex; }
-ccw() { cd "$HOME/GitHub/$1" && claude --worktree; }
+cdgh() { cd "$GITHUB_ROOT/$1"; }
+ccc() { cc "$@"; }
+cxc() { cx "$@"; }
+ccw() { cd "$GITHUB_ROOT/$1" && claude --worktree; }
 
 alias gs="git status"
 alias gd="git diff"
@@ -120,7 +112,7 @@ alias gstp="git stash pop"
 
 proj() {
   local dir
-  dir=$(find "$HOME/GitHub" -maxdepth 1 -mindepth 1 -type d | fzf --prompt="Project: " --height=40%)
+  dir=$(find "$GITHUB_ROOT" -maxdepth 1 -mindepth 1 -type d | fzf --prompt="Project: " --height=40%)
   [ -n "$dir" ] && cd "$dir"
 }
 
@@ -129,13 +121,13 @@ alias ccmd="ls ~/.claude/commands/ | sed 's/.md$//'"
 
 alias editzsh="nano ~/.zshrc && source ~/.zshrc"
 alias edittmux="nano ~/.tmux.conf"
-alias editclaude="nano ~/GitHub/CLAUDE.md"
+alias editclaude="nano $GITHUB_ROOT/CLAUDE.md"
 
 srvstatus() {
   echo "Uptime:   $(uptime | sed 's/.*up /up /;s/,  [0-9]* user.*//')"
   echo "Disk:     $(df -h / | awk 'NR==2{print $3 \" / \" $2 \" (\" $5 \" used)\"}')"
   echo "Memory:   $(memory_pressure 2>/dev/null | grep 'System-wide' | head -1 || vm_stat | head -5)"
-  echo "Projects: $(ls "$HOME/GitHub" | wc -l | tr -d ' ') in ~/GitHub"
+  echo "Projects: $(ls "$GITHUB_ROOT" | wc -l | tr -d ' ') in $GITHUB_ROOT"
   echo "Tmux:     $(tmux list-sessions 2>/dev/null | wc -l | tr -d ' ') sessions"
 }
 
