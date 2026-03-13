@@ -123,6 +123,8 @@ alias editzsh="nano ~/.zshrc && source ~/.zshrc"
 alias edittmux="nano ~/.tmux.conf"
 alias editclaude="nano $GITHUB_ROOT/CLAUDE.md"
 
+alias srv="ssh savorgserver"
+
 srvstatus() {
   echo "Uptime:   $(uptime | sed 's/.*up /up /;s/,  [0-9]* user.*//')"
   echo "Disk:     $(df -h / | awk 'NR==2{print $3 \" / \" $2 \" (\" $5 \" used)\"}')"
