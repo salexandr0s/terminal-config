@@ -91,8 +91,8 @@ alias lg="lazygit"
 alias y="yazi"
 
 cdgh() { cd "$GITHUB_ROOT/$1"; }
-ccc() { cc "$@"; }
-cxc() { cx "$@"; }
+ccc() { ssh -t savorgserver "cd ~/GitHub/${1:-.} && claude ${@:2}"; }
+cxc() { ssh -t savorgserver "cd ~/GitHub/${1:-.} && codex ${@:2}"; }
 ccw() { cd "$GITHUB_ROOT/$1" && claude --worktree; }
 
 alias gs="git status"
