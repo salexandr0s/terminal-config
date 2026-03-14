@@ -57,7 +57,7 @@ if [ -d "$AI_REPO" ]; then
     echo "[ok] Codex already installed"
   else
     echo "[install] Codex..."
-    brew install codex
+    brew install --cask codex
   fi
 
   "$AI_REPO/install.sh"
