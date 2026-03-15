@@ -117,6 +117,7 @@ export AI_HOUSE_STYLE="$profile"
 export AI_HOUSE_APPROVAL="$approval"
 export AI_HOUSE_SANDBOX="$sandbox"
 export AI_HOUSE_REASONING="$reasoning"
+export AI_SESSION_START_TS="$(date +%s)"
 
 extra_args=()
 if ! arg_value -p --profile "$@" >/dev/null 2>&1; then

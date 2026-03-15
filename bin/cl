@@ -66,6 +66,7 @@ export AI_HOUSE_MODE="$mode"
 export AI_HOUSE_STYLE="$style"
 export AI_HOUSE_SAFETY="$safety"
 export AI_HOUSE_EFFORT="$effort"
+export AI_SESSION_START_TS="$(date +%s)"
 
 extra_args=()
 if ! arg_value --effort "$@" >/dev/null 2>&1; then
