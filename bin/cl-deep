@@ -2,4 +2,4 @@
 set -euo pipefail
 
 export AI_HOUSE_MODE=deep
-exec "${GITHUB_ROOT:-$HOME/GitHub}/terminal-config/bin/cc" "$@"
+exec "${GITHUB_ROOT:-$HOME/GitHub}/terminal-config/bin/cl" "$@"

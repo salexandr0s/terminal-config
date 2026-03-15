@@ -3,8 +3,8 @@ set -euo pipefail
 
 resolve_mode() {
   case "$(basename "$0")" in
-    cc-fast) printf 'fast\n' ;;
-    cc-deep) printf 'deep\n' ;;
+    cl-fast) printf 'fast\n' ;;
+    cl-deep) printf 'deep\n' ;;
     *) printf '%s\n' "${AI_HOUSE_MODE:-normal}" ;;
   esac
 }

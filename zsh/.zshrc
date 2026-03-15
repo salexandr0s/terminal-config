@@ -91,9 +91,9 @@ alias lg="lazygit"
 alias y="yazi"
 
 cdgh() { cd "$GITHUB_ROOT/$1"; }
-ccc() { ssh -t savorgserver "cd ~/GitHub/${1:-.} && claude ${@:2}"; }
+clc() { ssh -t savorgserver "cd ~/GitHub/${1:-.} && claude ${@:2}"; }
 cxc() { ssh -t savorgserver "cd ~/GitHub/${1:-.} && codex ${@:2}"; }
-ccw() { cd "$GITHUB_ROOT/$1" && claude --worktree; }
+clw() { cd "$GITHUB_ROOT/$1" && claude --worktree; }
 
 alias gs="git status"
 alias gd="git diff"
@@ -117,7 +117,7 @@ proj() {
 }
 
 alias vault="$HOME/.claude/claudecodex-vault.sh"
-alias ccmd="ls ~/.claude/commands/ | sed 's/.md$//'"
+alias clmd="ls ~/.claude/commands/ | sed 's/.md$//'"
 
 alias editzsh="nano ~/.zshrc && source ~/.zshrc"
 alias edittmux="nano ~/.tmux.conf"

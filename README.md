@@ -16,9 +16,9 @@ terminal-config/
 ├── Brewfile                # Terminal packages and fonts
 ├── bin/
 │   ├── ai-notify           # Shared Claude/Codex completion notifier with cooldown support
-│   ├── cc                  # Claude launcher rooted in ~/GitHub
-│   ├── cc-fast             # Claude fast-mode launcher
-│   ├── cc-deep             # Claude deep-mode launcher
+│   ├── cl                  # Claude launcher rooted in ~/GitHub
+│   ├── cl-fast             # Claude fast-mode launcher
+│   ├── cl-deep             # Claude deep-mode launcher
 │   ├── cx                  # Codex launcher rooted in ~/GitHub
 │   ├── cx-fast             # Codex fast-mode launcher
 │   └── cx-deep             # Codex deep-mode launcher
@@ -43,7 +43,7 @@ terminal-config/
 - `direnv` for per-project env loading
 - `zoxide` for smarter directory jumps
 - `eza`, `bat`, `lazygit`, `yazi`
-- GitHub-aware `cc` / `cx` launchers for `claude` and `codex`
+- GitHub-aware `cl` / `cx` launchers for `claude` and `codex`
 - shared `fast` / `normal` / `deep` assistant launchers
 - shared `ai-notify` helper used by both Claude and Codex with cooldown-based smart notify
 - optional `tmux` with sane defaults
@@ -109,13 +109,13 @@ Common things to change:
 - remove `tmux` entirely if you do not use it
 - add personal env setup in `~/.config/terminal/local.zshenv`
 
-By default, `cc` and `cx` run inside `~/GitHub/<project>`:
+By default, `cl` and `cx` run inside `~/GitHub/<project>`:
 
 ```bash
-cc            # open claude in ~/GitHub
-cc pnevma     # open claude in ~/GitHub/pnevma
-cc-fast       # open claude in fast mode
-cc-deep       # open claude in deep mode
+cl            # open claude in ~/GitHub
+cl pnevma     # open claude in ~/GitHub/pnevma
+cl-fast       # open claude in fast mode
+cl-deep       # open claude in deep mode
 cx            # open codex in ~/GitHub
 cx pnevma     # open codex in ~/GitHub/pnevma
 cx-fast       # open codex in fast mode
