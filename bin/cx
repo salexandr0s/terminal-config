@@ -88,7 +88,7 @@ sandbox="${AI_HOUSE_SANDBOX:-danger-full-access}"
 case "$mode" in
   fast) reasoning="low" ;;
   deep) reasoning="xhigh" ;;
-  *) mode="normal"; reasoning="high" ;;
+  *) mode="normal"; reasoning="xhigh" ;;
 esac
 
 if [ -x "$renderer" ]; then
