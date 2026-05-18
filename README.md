@@ -24,6 +24,7 @@ terminal-config/
 │   └── cx-deep             # Codex deep-mode launcher
 ├── install.sh              # Idempotent bootstrap + symlink installer
 ├── zsh/
+│   ├── .zshenv             # Always-on shell environment setup
 │   ├── .zprofile           # Login-shell setup
 │   ├── .zshrc              # Interactive shell config
 │   ├── local.example.zsh   # Optional private overrides
@@ -63,7 +64,7 @@ The installer will:
 - install Homebrew packages from `Brewfile`
 - install Oh My Zsh if missing
 - install required Oh My Zsh custom plugins
-- back up any existing `~/.zshrc`, `~/.zprofile`, and `~/.tmux.conf`
+- back up any existing `~/.zshenv`, `~/.zshrc`, `~/.zprofile`, and `~/.tmux.conf`
 - symlink your live dotfiles to the repo versions
 - create local override templates in `~/.config/terminal/`
 
@@ -73,6 +74,7 @@ Re-running the installer is safe.
 
 | Source            | Target         |
 | ----------------- | -------------- |
+| `zsh/.zshenv`     | `~/.zshenv`    |
 | `zsh/.zshrc`      | `~/.zshrc`     |
 | `zsh/.zprofile`   | `~/.zprofile`  |
 | `tmux/.tmux.conf` | `~/.tmux.conf` |

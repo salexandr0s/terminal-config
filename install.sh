@@ -104,6 +104,7 @@ ensure_tpm
 
 echo
 echo "Linking dotfiles..."
+link "$REPO_DIR/zsh/.zshenv" "$HOME/.zshenv"
 link "$REPO_DIR/zsh/.zshrc" "$HOME/.zshrc"
 link "$REPO_DIR/zsh/.zprofile" "$HOME/.zprofile"
 link "$REPO_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"

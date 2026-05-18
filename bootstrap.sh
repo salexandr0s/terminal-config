@@ -69,24 +69,7 @@ fi
 if [ -d "$GHOSTTY_REPO" ]; then
   echo ""
   echo "=== ghostty-config ==="
-  GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
-  mkdir -p "$GHOSTTY_CONFIG_DIR"
-
-  for item in config shaders; do
-    src="$GHOSTTY_REPO/$item"
-    dst="$GHOSTTY_CONFIG_DIR/$item"
-
-    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
-      echo "  [ok] $dst"
-    else
-      if [ -e "$dst" ] || [ -L "$dst" ]; then
-        mv "$dst" "${dst}.bak-$(date +%Y%m%d%H%M%S)"
-        echo "  [bak] $dst"
-      fi
-      ln -s "$src" "$dst"
-      echo "  [ln] $dst -> $src"
-    fi
-  done
+  "$GHOSTTY_REPO/install.sh"
 else
   echo "[skip] $GHOSTTY_REPO not found — clone it first"
 fi
